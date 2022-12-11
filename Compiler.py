@@ -76,101 +76,101 @@ def optimize(code):
   return optimized_code
 
 def execute(code,verbose:bool):
-  # Define a list to store the particles
-  particles = []
+    # Define a list to store the particles
+    particles = []
 
-  # Define the functions that correspond to the instructions
-  def init_particle(mass, charge, spin):
-      # Initialize a particle with the given properties
-      particle = Particle(mass, charge, spin)
-      particles.append(particle)
+    # Define the functions that correspond to the instructions
+    def init_particle(mass, charge, spin):
+        # Initialize a particle with the given properties
+        particle = Particle(mass, charge, spin)
+        particles.append(particle)
 
-  def annihilate():
+    def annihilate():
 
-      #Perform an annihilation interaction
-      # Get the two particles involved in the interaction
-      particle1 = particles[-1]
-      particle2 = particles[-2]
-      
-      # Condition I imposed becuase of sharkov condition
-      if particle1.charge != -1 * particle2.charge:
-          raise ValueError("Cannot annihilate particles with non-opposite charges")
+        #Perform an annihilation interaction
+        # Get the two particles involved in the interaction
+        particle1 = particles[-1]
+        particle2 = particles[-2]
 
-      # Remove the particles from the list of particles
-      particles.remove(particle1)
-      particles.remove(particle2)
+        # Condition I imposed becuase of sharkov condition
+        if particle1.charge != -1 * particle2.charge:
+            raise ValueError("Cannot annihilate particles with non-opposite charges")
 
-  def create():
+        # Remove the particles from the list of particles
+        particles.remove(particle1)
+        particles.remove(particle2)
 
-      #Perform a creation interaction
-      # Get the two particles involved in the interaction
-      particle1 = particles[-1]
-      particle2 = particles[-2]
+    def create():
 
-      # Remove the particles from the list of particles
-      particles.remove(particle1)
-      particles.remove(particle2)
+        #Perform a creation interaction
+        # Get the two particles involved in the interaction
+        particle1 = particles[-1]
+        particle2 = particles[-2]
 
-      # Create a new particle
-      new_particle = create_particle(particle1, particle2)
-      particles.append(new_particle)
+        # Remove the particles from the list of particles
+        particles.remove(particle1)
+        particles.remove(particle2)
 
-  def scatter():
+        # Create a new particle
+        new_particle = create_particle(particle1, particle2)
+        particles.append(new_particle)
 
-      #Perform a scattering interaction
-      # Get the three particles involved in the interaction
-      particle1 = particles[-1]
-      particle2 = particles[-2]
-      particle3 = particles[-3]
+    def scatter():
 
-      # Remove the particles from the list of particles
-      particles.remove(particle1)
-      particles.remove(particle2)
-      particles.remove(particle3)
+        #Perform a scattering interaction
+        # Get the three particles involved in the interaction
+        particle1 = particles[-1]
+        particle2 = particles[-2]
+        particle3 = particles[-3]
 
-      # Scatter the particles
-      scattered_particles = scatter_particles(particle1, particle2, particle3)
-      particles.extend(scattered_particles)
+        # Remove the particles from the list of particles
+        particles.remove(particle1)
+        particles.remove(particle2)
+        particles.remove(particle3)
 
-  def move_forward(distance):
+        # Scatter the particles
+        scattered_particles = scatter_particles(particle1, particle2, particle3)
+        particles.extend(scattered_particles)
 
-      #Move the last particle in the list of particles forward by the given distance
-      particle = particles[-1]
-      move_particle(particle, "forward", distance)
+    def move_forward(distance):
 
-  def move_backward(distance):
+        #Move the last particle in the list of particles forward by the given distance
+        particle = particles[-1]
+        move_particle(particle, "forward", distance)
 
-      #Move the last particle in the list of particles backward by the given distance
-      particle = particles[-1]
-      move_particle(particle, "backward", distance)
+    def move_backward(distance):
 
-  def move_up(distance):
+        #Move the last particle in the list of particles backward by the given distance
+        particle = particles[-1]
+        move_particle(particle, "backward", distance)
 
-      #Move the last particle in the list of particles up by the given distance
-      particle = particles[-1]
-      move_particle(particle, "up", distance)
+    def move_up(distance):
 
-  def move_down(distance):
+        #Move the last particle in the list of particles up by the given distance
+        particle = particles[-1]
+        move_particle(particle, "up", distance)
 
-      #Move the last particle in the list of particles down by the given distance
-      particle = particles[-1]
-      move_particle(particle, "down", distance)
+    def move_down(distance):
+
+        #Move the last particle in the list of particles down by the given distance
+        particle = particles[-1]
+        move_particle(particle, "down", distance)
 
 
-  if verbose == True:
-      for particle in particles:
-      	print(particle)
+    if verbose == True:
+        for particle in particles:
+          print(particle)
 
-  # Define a dictionary of instructions and their corresponding functions
-  instructions = {
-    "INIT_PARTICLE": init_particle,
-    "ANNHILATE": annihilate,
-    "CREATE": create,
-    "SCATTER": scatter,
-    "MOVE_FORWARD": move_forward,
-    "MOVE_BACKWARD": move_backward,
-    "MOVE_UP": move_up,
-    "MOVE_DOWN": move_down}
+    # Define a dictionary of instructions and their corresponding functions
+    instructions = {
+      "INIT_PARTICLE": init_particle,
+      "ANNHILATE": annihilate,
+      "CREATE": create,
+      "SCATTER": scatter,
+      "MOVE_FORWARD": move_forward,
+      "MOVE_BACKWARD": move_backward,
+      "MOVE_UP": move_up,
+      "MOVE_DOWN": move_down}
 
 def graph_to_diagram(graph):
   # Define the particles, vertices, and arrows for the diagram
