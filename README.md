@@ -75,3 +75,51 @@ MOVE_FORWARD 5
 MOVE_BACKWARD 10
 MOVE_UP 15
 ```
+
+# Abstract Syntax Tree
+The AST functionality takes a diagram as input and generates an abstract syntax tree (AST) for the diagram.An AST is a tree-like representation of the structure of a program. It provides a high-level overview of the program, and can be used for various purposes such as code analysis, optimization, and code generation.
+
+```python
+
+from FeynmanCompiler.Compiler import *
+
+# Make a Graph
+
+graph = Graph(nodes=[Node("Electron"), Node("Proton"), Node("Photon")],
+              edges=[Edge("Annihilation", "Forward", 5,"InitialState", "FinalState"), Edge("Creation", "Backward", 10,"InitialState", "FinalState"), Edge("Scattering", "Up", 15,"InitialState", "FinalState")])
+
+# graph to a diagram
+feynman_graph = graph_to_diagram(graph)
+
+# Generate the AST for the diagram
+ast = generate_ast(feynman_graph)
+
+# Print the AST
+print(ast)
+
+```
+
+# Output
+```bash
+# AST
+
+Diagram 
+  Particle Electron
+  
+  Particle Proton
+  
+  Particle Photon
+  
+  Vertex Annihilation
+  
+  Vertex Creation
+  
+  Vertex Scattering
+  
+  Arrow Forward 5
+  
+  Arrow Backward 10
+  
+  Arrow Up 15
+
+```
