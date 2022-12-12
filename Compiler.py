@@ -6,6 +6,7 @@ def compile(diagram):
     "Electron": {"Mass": 0.511, "Charge": -1, "Spin": 1/2},
     "Proton": {"Mass": 938.3, "Charge": 1, "Spin": 1/2},
     "Photon": {"Mass": 0, "Charge": 0, "Spin": 1},
+    "Higgs": {"Mass": 126, "Charge": 0, "Spin": 0},
   }
   
   # Iterate over the particles in the diagram
