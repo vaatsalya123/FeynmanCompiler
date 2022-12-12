@@ -8,6 +8,8 @@ def compile(diagram):
     "Photon": {"Mass": 0, "Charge": 0, "Spin": 1},
     "Higgs": {"Mass": 126, "Charge": 0, "Spin": 0},
     "Neutrino": {"Mass": 0, "Charge": 0, "Spin": 1/2},
+    "Muon": {"Mass": 105.66, "Charge": -1, "Spin": 1/2},
+    "Pion": {"Mass": 139.57, "Charge": 1, "Spin": 0},
   }
   
   # Iterate over the particles in the diagram
@@ -26,6 +28,8 @@ def compile(diagram):
       machine_code += "SCATTER\n"
     elif vertex.type == "Decay":
     machine_code += "DECAY\n"
+    elif vertex.type == "PairProduction":
+  machine_code += "PAIR_PRODUCTION\n"
   
   # Iterate over the arrows in the diagram
   for arrow in diagram.arrows:
@@ -294,7 +298,9 @@ def generate_ast(diagram):
       ast.add_child(arrow_node)
   
     return ast
-
+  
+#Usage
+  
 diagram = Diagram(
   particles=[
     Particle(type="Proton", initial_state=(0, 0), final_state=(1, 0)),
@@ -312,11 +318,9 @@ diagram = Diagram(
 # Use the compiler to generate machine code for the diagram
 machine_code = compile(diagram)
 optimized_code = optimize(machine_code)
-print(machine_code)
 print(optimized_code)
 # Execute the generated machine code
-a =execute(optimized_code,verbose=True)
-print(a)
+print(execute(optimized_code,verbose=True))
 
 # Define the graph
 graph = Graph(nodes=[Node("Electron"), Node("Proton"), Node("Photon")],
@@ -327,8 +331,6 @@ State_graph = graph_to_diagram(graph)
 
 print(compile(State_graph))
 
-# Generate the AST for the diagram
-ast = generate_ast(diagram)
+# Generate the AST for the diagram ,And print
+print(generate_ast(diagram))
 
-# Print the AST
-print(ast)
