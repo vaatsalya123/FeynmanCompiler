@@ -31,6 +31,7 @@ machine_code = compile(diagram)
 
 # Generate optimized code
 optimized_code = optimize(machine_code)
+execute(optimized_code,verbose=True) # Perform all the operations
 
 print(optimized_code)
 ```
