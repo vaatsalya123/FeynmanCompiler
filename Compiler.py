@@ -7,6 +7,7 @@ def compile(diagram):
     "Proton": {"Mass": 938.3, "Charge": 1, "Spin": 1/2},
     "Photon": {"Mass": 0, "Charge": 0, "Spin": 1},
     "Higgs": {"Mass": 126, "Charge": 0, "Spin": 0},
+    "Neutrino": {"Mass": 0, "Charge": 0, "Spin": 1/2},
   }
   
   # Iterate over the particles in the diagram
@@ -23,6 +24,8 @@ def compile(diagram):
       machine_code += "CREATE\n"
     elif vertex.type == "Scattering":
       machine_code += "SCATTER\n"
+    elif vertex.type == "Decay":
+    machine_code += "DECAY\n"
   
   # Iterate over the arrows in the diagram
   for arrow in diagram.arrows:
