@@ -37,11 +37,15 @@ print(optimized_code)
 ```
 # Output
 ```bash
-INIT_PARTICLE 938.3 1 0.5
-INIT_PARTICLE 0.511 -1 0.5
-ANNHILATE
-MOVE_FORWARD 1
-MOVE_FORWARD 1
+mov eax, 938.3
+mov ebx, 1
+mov ecx, 0.5
+mov eax, 0.511
+mov ebx, -1
+mov ecx, 0.5
+call ANNHILATE
+add eax, 1
+add eax, 1
 ```
 # Graph usage
 
@@ -66,15 +70,22 @@ print(compile(feynman_graph))
 ```bash
 # Indeed we have a new output
 
-INIT_PARTICLE 0.511 -1 0.5
-INIT_PARTICLE 938.3 1 0.5
-INIT_PARTICLE 0 0 1
-ANNHILATE
-CREATE
-SCATTER
-MOVE_FORWARD 5
-MOVE_BACKWARD 10
-MOVE_UP 15
+mov eax, 0.511
+mov ebx, -1
+mov ecx, 0.5
+mov eax, 938.3
+mov ebx, 1
+mov ecx, 0.5
+mov eax, 0
+mov ebx, 0
+mov ecx, 1
+call ANNHILATE
+call CREATE
+call SCATTER
+add eax, 5
+sub eax, 10
+add ebx, 15
+
 ```
 
 # Abstract Syntax Tree

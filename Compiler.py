@@ -14,34 +14,37 @@ def compile(diagram):
   
   # Iterate over the particles in the diagram
   for particle in diagram.particles:
-    # Initialize the particle's properties
-    machine_code += "INIT_PARTICLE {} {} {}\n".format(particle_types[particle.type]["Mass"], particle_types[particle.type]["Charge"], particle_types[particle.type]["Spin"])
+      # Initialize the particle's properties
+      machine_code += "mov eax, {}\n".format(particle_types[particle.type]["Mass"])
+      machine_code += "mov ebx, {}\n".format(particle_types[particle.type]["Charge"])
+      machine_code += "mov ecx, {}\n".format(particle_types[particle.type]["Spin"])
+
   
   # Iterate over the vertices in the diagram
   for vertex in diagram.vertices:
     # Perform the appropriate type of interaction at the vertex
     if vertex.type == "Annihilation":
-      machine_code += "ANNHILATE\n"
+      machine_code += "call ANNHILATE\n"
     elif vertex.type == "Creation":
-      machine_code += "CREATE\n"
+      machine_code += "call CREATE\n"
     elif vertex.type == "Scattering":
-      machine_code += "SCATTER\n"
+      machine_code += "call SCATTER\n"
     elif vertex.type == "Decay":
-    machine_code += "DECAY\n"
+      machine_code += "call DECAY\n"
     elif vertex.type == "PairProduction":
-  machine_code += "PAIR_PRODUCTION\n"
+      machine_code += "call PAIR_PRODUCTION\n"
   
-  # Iterate over the arrows in the diagram
+    # Iterate over the arrows in the diagram
   for arrow in diagram.arrows:
-    # Move the particle along the arrow's path
-    if arrow.direction == "Forward":
-      machine_code += "MOVE_FORWARD {}\n".format(arrow.length)
-    elif arrow.direction == "Backward":
-      machine_code += "MOVE_BACKWARD {}\n".format(arrow.length)
-    elif arrow.direction == "Up":
-      machine_code += "MOVE_UP {}\n".format(arrow.length)
-    elif arrow.direction == "Down":
-      machine_code += "MOVE_DOWN {}\n".format(arrow.length)
+      # Move the particle along the arrow's path
+      if arrow.direction == "Forward":
+        machine_code += "add eax, {}\n".format(arrow.length)
+      elif arrow.direction == "Backward":
+        machine_code += "sub eax, {}\n".format(arrow.length)
+      elif arrow.direction == "Up":
+        machine_code += "add ebx, {}\n".format(arrow.length)
+      elif arrow.direction == "Down":
+        machine_code += "sub ebx, {}\n".format(arrow.length)
 
   
   # Optimize the generated machine code for performance
