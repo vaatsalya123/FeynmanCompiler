@@ -222,6 +222,8 @@ class Particle:
     self.type = type
     self.initial_state = initial_state
     self.final_state = final_state
+  def __str__(self):
+      return f"{self.type}" 
     
 class Vertex:
   def __init__(self, type, coordinates):
@@ -340,3 +342,100 @@ print(compile(State_graph))
 # Generate the AST for the diagram ,And print
 print(generate_ast(diagram))
 
+def assembly_to_diagram(assembly_code, particle_type):
+  # Initialize empty lists for particles, vertices, and arrows
+  particles = []
+  vertices = []
+  arrows = []
+  
+  # Split the assembly code into lines
+  lines = assembly_code.split("\n")
+  
+  # Iterate over the lines of code
+  for line in lines:
+    # Split the line into the instruction and its arguments
+    parts = line.split(" ")
+    instruction = parts[0]
+    args = parts[1:]
+    
+    # Check if the instruction is a movement instruction
+    if instruction in ["add", "sub"]:
+      # Add an arrow to the diagram with the appropriate direction and length
+      if instruction == "add":
+        if args[0] == "eax":
+          arrows.append(Arrow("Forward", int(args[1])))
+        elif args[0] == "ebx":
+          arrows.append(Arrow("Up", int(args[1])))
+      elif instruction == "sub":
+        if args[0] == "eax":
+          arrows.append(Arrow("Backward", int(args[1])))
+        elif args[0] == "ebx":
+          arrows.append(Arrow("Down", int(args[1])))
+    # Check if the instruction is a vertex interaction instruction
+    elif instruction == "call":
+      # Add a vertex to the diagram with the appropriate type
+      if args[0] == "ANNHILATE":
+        vertices.append(Vertex("Annihilation",coordinates=None))
+      elif args[0] == "CREATE":
+        vertices.append(Vertex("Creation",coordinates=None))
+      elif args[0] == "SCATTER":
+        vertices.append(Vertex("Scattering",coordinates=None))
+      elif args[0] == "DECAY":
+        vertices.append(Vertex("Decay",coordinates=None))
+      elif args[0] == "PAIR_PRODUCTION":
+        vertices.append(Vertex("PairProduction"))
+    # If the instruction is not a movement or interaction instruction, it must be a particle definition instruction
+    elif instruction == "mov":
+      # Split the arguments into the register and value
+      register = args[0]
+      value = args[1]
+      
+      # Look up the particle type and properties based on the register value
+      particle_properties = particle_type[value]
+      particle_type = value
+      
+      # Create a new particle with the appropriate type and properties
+      particles.append(Particle(particle_type, initial_state=None,final_state=None))
+      
+  # Return the lists of particles, vertices, and arrows
+  return particles, vertices, arrows
+      
+
+
+assembly_code = """
+mov eax Electron
+call ANNHILATE
+add eax 10
+call CREATE
+sub ebx 5
+call SCATTER
+"""
+# Convert the assembly code to a diagram
+
+particle_type = {
+  "Electron": {"Mass": 0.511, "Charge": -1, "Spin": 1/2},
+  "Proton": {"Mass": 938.3, "Charge": 1, "Spin": 1/2},
+  "Photon": {"Mass": 0, "Charge": 0, "Spin": 1}, 
+  "Higgs": {"Mass": 126, "Charge": 0, "Spin": 0},   
+  "Neutrino": {"Mass": 0, "Charge": 0, "Spin": 1/2},  
+  "Muon": {"Mass": 105.66, "Charge": -1, "Spin": 1/2},
+  "Pion": {"Mass": 139.57, "Charge": 1, "Spin": 0},
+  "Gluon": {"Mass": 0, "Charge": 0, "Spin": 1},    
+  "Quark": {"Mass": 0, "Charge": 1/3, "Spin": 1/2},     
+  "Antiquark": {"Mass": 0, "Charge": -1/3, "Spin": 1/2}
+}
+
+particles, vertices, arrows = assembly_to_diagram(assembly_code,particle_type)
+
+# Print the resulting diagram elements
+print("Particles:")
+for particle in particles:
+  print(particle)
+
+print("\nVertices:")
+for vertex in vertices:
+  print(vertex)
+
+print("\nArrows:")
+for arrow in arrows:
+  print(arrow)
