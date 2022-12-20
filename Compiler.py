@@ -10,6 +10,9 @@ def compile(diagram):
     "Neutrino": {"Mass": 0, "Charge": 0, "Spin": 1/2},
     "Muon": {"Mass": 105.66, "Charge": -1, "Spin": 1/2},
     "Pion": {"Mass": 139.57, "Charge": 1, "Spin": 0},
+    "Gluon": {"Mass": 0, "Charge": 0, "Spin": 1},
+    "Quark": {"Mass": 0, "Charge": 1/3, "Spin": 1/2},
+    "Antiquark": {"Mass": 0, "Charge": -1/3, "Spin": 1/2},
   }
   
   # Iterate over the particles in the diagram
