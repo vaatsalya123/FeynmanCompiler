@@ -26,18 +26,25 @@ def compile(diagram):
   # Iterate over the vertices in the diagram
   for vertex in diagram.vertices:
     # Perform the appropriate type of interaction at the vertex
-    if vertex.type == "Annihilation":
-      machine_code += "call ANNHILATE\n"
-    elif vertex.type == "Creation":
-      machine_code += "call CREATE\n"
-    elif vertex.type == "Scattering":
-      machine_code += "call SCATTER\n"
-    elif vertex.type == "Decay":
-      machine_code += "call DECAY\n"
-    elif vertex.type == "PairProduction":
-      machine_code += "call PAIR_PRODUCTION\n"
-  
-    # Iterate over the arrows in the diagram
+        if vertex.type == "Annihilation":
+            machine_code += "call ANNHILATE\n"
+        elif vertex.type == "Creation":
+            machine_code += "call CREATE\n"
+        elif vertex.type == "Scattering":
+            machine_code += "call SCATTER\n"
+        elif vertex.type == "Decay":
+            machine_code += "call DECAY\n"
+        elif vertex.type == "PairProduction":
+            machine_code += "call PAIR_PRODUCTION\n"
+    
+        elif vertex.type == "Propagater":
+            # Calculate the Feynman propagator for the particle at the vertex
+            machine_code += "mov edx, {}\n".format(vertex.x) # x-coordinate of the vertex
+            machine_code += "mov esi, {}\n".format(vertex.y) # y-coordinate of the vertex
+            machine_code += "call FETCH_PROPAGATOR\n"
+            machine_code += "mul eax, [esi]\n" # Multiply the propagator by the probability of the particle reaching the vertex
+  # Iterate over the arrows in the diagram
+
   for arrow in diagram.arrows:
       # Move the particle along the arrow's path
       if arrow.direction == "Forward":
@@ -226,9 +233,12 @@ class Particle:
       return f"{self.type}" 
     
 class Vertex:
-  def __init__(self, type, coordinates):
-    self.type = type
-    self.coordinates = coordinates
+    def __init__(self, type, coordinates):
+        self.type = type
+        self.coordinates = coordinates
+        if coordinates is not None:
+            self.x = coordinates[0]
+            self.y = coordinates[1]
     
 class Arrow:
   def __init__(self, direction, length):
@@ -316,6 +326,7 @@ diagram = Diagram(
   ],
   vertices=[
     Vertex(type="Annihilation", coordinates=(1, 0)),
+    Vertex(type="Propagater",coordinates=(0,0))
   ],
   arrows=[
     Arrow(direction="Forward", length=1),
