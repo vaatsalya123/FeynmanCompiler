@@ -58,11 +58,11 @@ def compile(diagram):
 
   
   # Optimize the generated machine code for performance
-  machine_code = optimize(machine_code)
+  machine_code = optimize(machine_code,advanced=False)
   
   return machine_code
 
-def optimize(code):
+def optimize(code,advanced=None):
   # Use advanced code optimization techniques to improve the performance of the generated code
   optimized_code = ""
   
@@ -93,7 +93,18 @@ def optimize(code):
     else:
       # If the instruction is not a movement instruction, add it to the optimized code as is
       optimized_code += "{}\n".format(line)
+
+    if advanced == True:
+
+        if  line.startswith("mov") and "," in line:
+            # Extract the destination register and the value being moved
+            register, value = line.split(" ")[1:]
       
+        # Check if the value is a constant
+        if value.isnumeric():
+            # Replace the mov instruction with a lea instruction, which can often be faster
+            optimized_code += "lea {} [{}]\n".format(register, value)
+
   return optimized_code
 
 def execute(code,verbose:bool):
@@ -336,10 +347,9 @@ diagram = Diagram(
 
 # Use the compiler to generate machine code for the diagram
 machine_code = compile(diagram)
-optimized_code = optimize(machine_code)
-print(optimized_code)
+print(machine_code)
 # Execute the generated machine code
-print(execute(optimized_code,verbose=True))
+print(execute(machine_code,verbose=True))
 
 # Define the graph
 graph = Graph(nodes=[Node("Electron"), Node("Proton"), Node("Photon")],
