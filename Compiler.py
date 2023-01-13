@@ -1,4 +1,4 @@
-def compile(diagram):
+def compile(diagram,optim=False):
   machine_code = ""
   
   # Define the particle types and their properties
@@ -17,10 +17,15 @@ def compile(diagram):
   
   # Iterate over the particles in the diagram
   for particle in diagram.particles:
-      # Initialize the particle's properties
-      machine_code += "mov eax, {}\n".format(particle_types[particle.type]["Mass"])
-      machine_code += "mov ebx, {}\n".format(particle_types[particle.type]["Charge"])
-      machine_code += "mov ecx, {}\n".format(particle_types[particle.type]["Spin"])
+      if optim:
+            machine_code += "lea eax, {}\n".format(particle_types[particle.type]["Mass"])
+            machine_code += "lea ebx, {}\n".format(particle_types[particle.type]["Charge"])
+            machine_code += "lea ecx, {}\n".format(particle_types[particle.type]["Spin"])
+      else:
+        # Initialize the particle's properties
+        machine_code += "mov eax, {}\n".format(particle_types[particle.type]["Mass"])
+        machine_code += "mov ebx, {}\n".format(particle_types[particle.type]["Charge"])
+        machine_code += "mov ecx, {}\n".format(particle_types[particle.type]["Spin"])
 
   
   # Iterate over the vertices in the diagram
@@ -58,7 +63,7 @@ def compile(diagram):
 
   
   # Optimize the generated machine code for performance
-  machine_code = optimize(machine_code,advanced=False)
+  machine_code = optimize(machine_code,advanced=optim)
   
   return machine_code
 
@@ -99,11 +104,6 @@ def optimize(code,advanced=None):
         if  line.startswith("mov") and "," in line:
             # Extract the destination register and the value being moved
             register, value = line.split(" ")[1:]
-      
-        # Check if the value is a constant
-        if value.isnumeric():
-            # Replace the mov instruction with a lea instruction, which can often be faster
-            optimized_code += "lea {} [{}]\n".format(register, value)
 
   return optimized_code
 
@@ -460,3 +460,4 @@ for vertex in vertices:
 print("\nArrows:")
 for arrow in arrows:
   print(arrow)
+
